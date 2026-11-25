@@ -1,12 +1,31 @@
-# MathsMaster — ICSE Class 9 Mathematics Practice App
+# SuretySprint — ICSE Class 9 Multi-Subject Learning Platform
 
-A fast, offline-ready, modern **ICSE Class 9 Mathematics Practice Web App** built strictly aligned with the **CISCE 2026–27 / 2027–28 Syllabus (8 Units, 25 Chapters)**.
-
-Designed for students revising at home on a laptop, tablet, or mobile phone with zero login, zero backend dependency, and full PWA offline support ("Add to Home Screen").
+A fast, offline-ready, modern **ICSE Class 9 Multi-Subject Learning & Practice Platform** built strictly aligned with the **CISCE 2026–27 / 2027–28 Curriculum**.
 
 ---
 
-## 🚀 Key Features
+## 🌐 Subdomain Architecture
+
+SuretySprint divides subjects into dedicated, focused subdomains for clean subject immersion:
+
+| Domain / Subdomain | Scope | Status |
+| :--- | :--- | :--- |
+| **`suretysprint.com`** *(Main Domain)* | **Subjects Directory & Hub**: Complete list of all ICSE Class 9 subjects (Group I, II, III). | **Live** |
+| **`maths.suretysprint`** *(Subdomain)* | **Mathematics Practice Suite**: All 25 CISCE chapters, procedural question generators, 3-step hint ladders, worked solutions, and 3-hour 80-mark mock papers. | **Live (25/25 Chapters)** |
+| `physics.suretysprint` | Physics Practice Suite | *Coming Soon* |
+| `chemistry.suretysprint` | Chemistry Practice Suite | *Coming Soon* |
+| `biology.suretysprint` | Biology Practice Suite | *Coming Soon* |
+| `history.suretysprint` | History & Civics Practice Suite | *Coming Soon* |
+| `geography.suretysprint` | Geography Practice Suite | *Coming Soon* |
+| `english.suretysprint` | English Language & Literature | *Coming Soon* |
+| `computer.suretysprint` | Computer Applications (Java) | *Coming Soon* |
+| `commerce.suretysprint` | Commercial Studies | *Coming Soon* |
+
+> **Development / Single-Origin Preview**: In local development (`localhost:5173`) or standalone deployments without wildcard DNS, append `?sub=maths` or click the Mathematics card on the main portal to switch into the Mathematics suite. In production, requests to `maths.suretysprint.*` automatically load the Mathematics app.
+
+---
+
+## 🚀 Mathematics Suite Features (`maths.suretysprint`)
 
 - **Full 25-Chapter Syllabus Coverage**: All 8 CISCE units and 25 chapters structured with authentic ICSE board-style questions.
 - **Procedural Question Generators**: Unlimited practice with dynamically randomized numbers, surds, algebraic expressions, geometric angles, and statistical tables.

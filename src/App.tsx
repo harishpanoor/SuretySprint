@@ -3,6 +3,8 @@ import { HomePage } from './pages/HomePage';
 import { PracticePage } from './pages/PracticePage';
 import { MistakesPage } from './pages/MistakesPage';
 import { MockTestPage } from './pages/MockTestPage';
+import { SubjectsHubPage } from './pages/SubjectsHubPage';
+import { getSubdomain, navigateToSubdomain, SubdomainType } from './utils/subdomain';
 import { Storage } from './engine/storage';
 import {
   GraduationCap,
@@ -11,17 +13,27 @@ import {
   Clock,
   WifiOff,
   Sparkles,
+  ArrowLeft,
+  Rocket,
 } from 'lucide-react';
 
 type NavTab = 'home' | 'practice' | 'mistakes' | 'mock';
 
 export const App: React.FC = () => {
+  const [subdomain, setSubdomain] = useState<SubdomainType>(getSubdomain());
   const [currentTab, setCurrentTab] = useState<NavTab>('home');
   const [activeChapterId, setActiveChapterId] = useState<number>(1);
   const [mistakesCount, setMistakesCount] = useState<number>(0);
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
 
   useEffect(() => {
+    const handleSubdomainChange = () => {
+      setSubdomain(getSubdomain());
+    };
+
+    window.addEventListener('popstate', handleSubdomainChange);
+    window.addEventListener('subdomainChange', handleSubdomainChange);
+
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
@@ -39,6 +51,8 @@ export const App: React.FC = () => {
     const interval = setInterval(updateMistakes, 3000);
 
     return () => {
+      window.removeEventListener('popstate', handleSubdomainChange);
+      window.removeEventListener('subdomainChange', handleSubdomainChange);
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
       window.removeEventListener('mistakesUpdated', updateMistakes);
@@ -58,31 +72,50 @@ export const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // If on main domain, render Subjects Directory Hub
+  if (subdomain === 'main') {
+    return <SubjectsHubPage />;
+  }
+
+  // If on 'maths' subdomain (e.g. maths.suretysprint.com or maths.localhost or ?sub=maths)
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col selection:bg-blue-100 selection:text-blue-900">
       {/* Top Navbar */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
         <div className="max-w-6xl mx-auto px-2.5 sm:px-6 h-16 flex items-center justify-between gap-2">
-          {/* Brand Logo */}
-          <div
-            onClick={() => setCurrentTab('home')}
-            className="flex items-center gap-2 cursor-pointer select-none group shrink-0"
-          >
-            <div className="p-2 bg-gradient-to-tr from-blue-700 to-indigo-600 rounded-xl text-white shadow-sm group-hover:scale-105 transition-transform">
-              <GraduationCap className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-slate-900 text-sm sm:text-base tracking-tight">
-                  MathsMaster
-                </span>
-                <span className="text-[10px] font-bold px-1.5 py-0.2 bg-blue-100 text-blue-800 rounded font-mono hidden sm:inline">
-                  ICSE 9
-                </span>
+          {/* Brand Logo & Back to Main Domain Hub */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              type="button"
+              onClick={() => navigateToSubdomain('main', setSubdomain)}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold text-slate-700 hover:text-blue-700 bg-slate-100 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 transition-colors cursor-pointer group shrink-0"
+              title="Back to SuretySprint Main Subjects Hub"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform text-slate-500 group-hover:text-blue-700" />
+              <span className="hidden sm:inline">All Subjects</span>
+              <span className="sm:hidden text-[10px]">Hub</span>
+            </button>
+
+            <div
+              onClick={() => setCurrentTab('home')}
+              className="flex items-center gap-2 cursor-pointer select-none group shrink-0"
+            >
+              <div className="p-2 bg-gradient-to-tr from-blue-700 to-indigo-600 rounded-xl text-white shadow-sm group-hover:scale-105 transition-transform">
+                <GraduationCap className="w-5 h-5" />
               </div>
-              <p className="text-[10px] text-slate-400 font-medium hidden sm:block">
-                All 25 Chapters • Step-by-Step Practice
-              </p>
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <span className="font-extrabold text-slate-900 text-sm sm:text-base tracking-tight">
+                    SuretySprint
+                  </span>
+                  <span className="text-[10px] font-bold px-1.5 py-0.2 bg-blue-100 text-blue-800 rounded font-mono">
+                    maths
+                  </span>
+                </div>
+                <p className="text-[10px] text-slate-400 font-medium hidden sm:block">
+                  maths.suretysprint • 25 Chapters Practice
+                </p>
+              </div>
             </div>
           </div>
 
@@ -156,7 +189,7 @@ export const App: React.FC = () => {
             ) : (
               <>
                 <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span>Offline Ready (PWA)</span>
+                <span>maths.suretysprint</span>
               </>
             )}
           </div>
@@ -199,11 +232,12 @@ export const App: React.FC = () => {
       {/* Footer */}
       <footer className="bg-white border-t border-slate-200 mt-auto py-6 text-center text-xs text-slate-400">
         <div className="max-w-6xl mx-auto px-4 space-y-1">
-          <p className="font-medium text-slate-600">
-            ICSE Class 9 Mathematics Complete Practice Suite • CISCE Curriculum Aligned
+          <p className="font-medium text-slate-600 flex items-center justify-center gap-1.5">
+            <Rocket className="w-3.5 h-3.5 text-blue-600" />
+            <span>SuretySprint Mathematics Suite • Subdomain: maths.suretysprint</span>
           </p>
           <p className="text-[11px] text-slate-400">
-            Offline PWA • Procedural Questions • 3-Step Hint Ladder • Bundled KaTeX & mathjs
+            All 25 CISCE ICSE Class 9 Chapters • Offline PWA • Procedural Questions • 3-Step Hint Ladder
           </p>
         </div>
       </footer>

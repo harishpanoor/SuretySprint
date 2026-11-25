@@ -10,9 +10,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
-        name: 'ICSE Class 9 Maths Master',
-        short_name: 'ICSE Maths 9',
-        description: 'Offline-ready ICSE Class 9 Mathematics Practice and Revision App with 18 Chapters and full step-by-step solutions.',
+        name: 'SuretySprint Maths — ICSE Class 9',
+        short_name: 'SuretySprint Maths',
+        description: 'Offline-ready ICSE Class 9 Mathematics Practice and Revision App with 25 Chapters and full step-by-step solutions.',
         theme_color: '#1e40af',
         background_color: '#f8fafc',
         display: 'standalone',
@@ -34,6 +34,11 @@ export default defineConfig({
       }
     })
   ],
+  server: {
+    host: true,
+    allowedHosts: true,
+    port: 5173
+  },
   test: {
     globals: true,
     environment: 'node',
